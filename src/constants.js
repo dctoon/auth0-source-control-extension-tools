@@ -56,4 +56,7 @@ constants.CLIENTS_DIRECTORY = 'clients';
 constants.CLIENTS_CLIENT_NAME = 'clients';
 constants.CLIENTS_CLIENT_ID_NAME = 'client_id';
 
+constants.RULES_CONFIGS_DIRECTORY = 'rules-configs';
+constants.RULES_CONFIGS_FILE_NAME = 'config.json';
+
 constants.CONCURRENT_CALLS = 5;

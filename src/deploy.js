@@ -34,6 +34,8 @@ const trackProgress = function(progressData) {
     rulesCreated: 0,
     rulesUpdated: 0,
     rulesDeleted: 0,
+    rulesConfigsUpserted: 0,
+    rulesConfigsDeleted: 0,
     error: null,
     logs: logs,
     log: log
@@ -53,7 +55,8 @@ module.exports = function(progressData, context, client, storage, config, slackT
         resourceServers: context.resourceServers,
         rules: context.rules,
         pages: context.pages,
-        databases: context.databases
+        databases: context.databases,
+        rulesConfigs: context.rulesConfigs
       }, utils.checksumReplacer([ 'htmlFile', 'scriptFile' ]));
       progress.log('Assets: ' + assets, null, 2);
     })
@@ -94,6 +97,12 @@ module.exports = function(progressData, context, client, storage, config, slackT
       return auth0.updateClients(progress, client);
     })
     .then(function() {
+      return auth0.deleteRulesConfigs(progress, client, context.rulesConfigs);
+    })
+    .then(function() {
+      return auth0.upsertRulesConfigs(progress, client, context.rulesConfigs);
+    })
+    .then(function() {
       return progress.log('Done.');
     })
     .then(function() {
@@ -113,6 +122,10 @@ module.exports = function(progressData, context, client, storage, config, slackT
           created: progress.rulesCreated,
           updated: progress.rulesUpdated,
           deleted: progress.rulesDeleted
+        },
+        rulesConfigs: {
+          upserted: progress.rulesConfigsUpserted,
+          deleted: progress.rulesConfigsDeleted
         }
       };
     })
